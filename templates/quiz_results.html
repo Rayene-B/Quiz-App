@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Results</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .incorrect { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>Quiz Results</h1>
+    <p>You scored {{ score }} out of {{ total }}.</p>
+    {% if incorrect %}
+        <h2>Incorrect Answers</h2>
+        {% for item in incorrect %}
+            <div class="incorrect">
+                <p><strong>{{ item.term }}</strong></p>
+                <p>Correct: {{ item.correct }}</p>
+                <p>Your answer: {{ item.selected }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <a href="{{ url_for('index') }}">Back to Home</a>
+</body>
+</html>

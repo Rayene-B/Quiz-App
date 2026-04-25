@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Terms - {{ quiz_name }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        form { margin: 20px 0; }
+        input { margin: 5px; display: block; }
+        .flash { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Add Terms to {{ quiz_name }}</h1>
+    <a href="{{ url_for('folder', folder_name=folder_name) }}">Back to {{ folder_name }}</a>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul>
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <form action="{{ url_for('add_terms') }}" method="post">
+        <input type="text" name="term" placeholder="Term" required>
+        <input type="text" name="definition" placeholder="Definition" required>
+        <button type="submit">Add Term</button>
+    </form>
+    <a href="{{ url_for('finish_adding_terms') }}">Finish Adding Terms</a>
+</body>
+</html>
