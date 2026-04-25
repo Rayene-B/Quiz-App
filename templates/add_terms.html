@@ -1,33 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Terms - {{ quiz_name }}</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        form { margin: 20px 0; }
-        input { margin: 5px; display: block; }
-        .flash { color: red; }
-    </style>
-</head>
-<body>
-    <h1>Add Terms to {{ quiz_name }}</h1>
-    <a href="{{ url_for('folder', folder_name=folder_name) }}">Back to {{ folder_name }}</a>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul>
-                {% for category, message in messages %}
-                    <li class="{{ category }}">{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
+{% extends 'base.html' %}
+
+{% block title %}Add Terms - {{ quiz_name }}{% endblock %}
+
+{% block content %}
+    <section class="quiz-header">
+        <div>
+            <h2>Add Terms to {{ quiz_name }}</h2>
+            <p>Enter a term and its definition, then keep adding until your quiz is ready.</p>
+        </div>
+        <a class="button" href="{{ url_for('folder', folder_name=folder_name) }}">Back to folder</a>
+    </section>
+
     <form action="{{ url_for('add_terms') }}" method="post">
-        <input type="text" name="term" placeholder="Term" required>
-        <input type="text" name="definition" placeholder="Definition" required>
-        <button type="submit">Add Term</button>
+        <div class="form-field">
+            <label for="term">Term</label>
+            <input id="term" type="text" name="term" placeholder="Term" required>
+        </div>
+        <div class="form-field">
+            <label for="definition">Definition</label>
+            <input id="definition" type="text" name="definition" placeholder="Definition" required>
+        </div>
+        <button type="submit" class="button">Add Term</button>
     </form>
-    <a href="{{ url_for('finish_adding_terms') }}">Finish Adding Terms</a>
-</body>
-</html>
+
+    <p style="margin-top: 24px;"><a class="button" href="{{ url_for('finish_adding_terms') }}">Finish Adding Terms</a></p>
+{% endblock %}

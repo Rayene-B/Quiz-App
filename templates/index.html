@@ -1,40 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz App</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .folder { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
-        .folder a { text-decoration: none; color: blue; }
-        form { margin: 20px 0; }
-        input { margin: 5px; }
-        .flash { color: red; }
-    </style>
-</head>
-<body>
-    <h1>Quiz App</h1>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul>
-                {% for category, message in messages %}
-                    <li class="{{ category }}">{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-    <h2>Folders</h2>
-    {% for folder in folders %}
-        <div class="folder">
-            <a href="{{ url_for('folder', folder_name=folder) }}">{{ folder }}</a>
-            <a href="{{ url_for('delete_folder', folder_name=folder) }}" onclick="return confirm('Delete this folder?')">Delete</a>
+{% extends 'base.html' %}
+
+{% block title %}Quiz App{% endblock %}
+
+{% block content %}
+    <section class="quiz-header">
+        <div>
+            <h2>Folders</h2>
+            <p>Organize your quizzes by subject or topic.</p>
         </div>
-    {% endfor %}
-    <h2>Create New Folder</h2>
-    <form action="{{ url_for('create_folder') }}" method="post">
-        <input type="text" name="name" placeholder="Folder Name" required>
-        <button type="submit">Create</button>
-    </form>
-</body>
-</html>
+    </section>
+
+    {% if not folders %}
+        <p>No folders created yet. Start by adding one below.</p>
+    {% endif %}
+
+    <div class="card-grid">
+        {% for folder in folders %}
+            <div class="card">
+                <div>
+                    <a href="{{ url_for('folder', folder_name=folder) }}">{{ folder }}</a>
+                </div>
+                <a class="button danger" href="{{ url_for('delete_folder', folder_name=folder) }}" onclick="return confirm('Delete this folder?')">Delete</a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <section style="margin-top:32px;">
+        <h2>Create New Folder</h2>
+        <form action="{{ url_for('create_folder') }}" method="post" class="form-row">
+            <input type="text" name="name" placeholder="Folder Name" required>
+            <button type="submit" class="button">Create</button>
+        </form>
+    </section>
+{% endblock %}

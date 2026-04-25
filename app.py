@@ -166,13 +166,9 @@ def quiz_results():
     session.pop('incorrect', None)
     return render_template('quiz_results.html', score=score, total=total, incorrect=incorrect)
 
-def open_browser():
-    time.sleep(1)  # Wait for server to start
-    try:
-        webbrowser.get('chrome').open('http://127.0.0.1:5000/')
-    except webbrowser.Error:
-        webbrowser.open('http://127.0.0.1:5000/')
+def get_port():
+    return int(os.environ.get('PORT', 5000))
 
 if __name__ == '__main__':
-    threading.Thread(target=open_browser).start()
-    app.run(debug=True)
+    port = get_port()
+    app.run(host='0.0.0.0', port=port, debug=True, use_reloader=False)

@@ -1,23 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz - Question {{ current }}</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        form { margin: 20px 0; }
-        input { margin: 5px; }
-    </style>
-</head>
-<body>
-    <h1>Question {{ current }} of {{ total }}</h1>
-    <p><strong>{{ question.term }}</strong></p>
+{% extends 'base.html' %}
+
+{% block title %}Question {{ current }} of {{ total }}{% endblock %}
+
+{% block content %}
+    <section class="quiz-header">
+        <div>
+            <h2>Question {{ current }} of {{ total }}</h2>
+            <p>Select the correct definition for the term below.</p>
+        </div>
+    </section>
+
+    <div class="card" style="margin-bottom: 24px;">
+        <strong>{{ question.term }}</strong>
+    </div>
+
     <form action="{{ url_for('quiz_question') }}" method="post">
-        {% for option in question.options %}
-            <input type="radio" name="option" value="{{ option }}" required> {{ option }}<br>
-        {% endfor %}
-        <button type="submit">Submit</button>
+        <div class="options-list">
+            {% for option in question.options %}
+                <label class="option-choice">
+                    <input type="radio" name="option" value="{{ option }}" required>
+                    <span>{{ option }}</span>
+                </label>
+            {% endfor %}
+        </div>
+        <button type="submit" class="button" style="margin-top: 18px;">Submit Answer</button>
     </form>
-</body>
-</html>
+{% endblock %}

@@ -17,6 +17,16 @@ A Flask-based quiz application for creating and taking quizzes with flashcards.
 
 The app will open in your browser at http://127.0.0.1:5000/
 
+## Deployment
+
+This app is configured for Vercel deployment using `vercel.json` and the Python runtime.
+
+To deploy:
+
+1. Install the Vercel CLI: `npm install -g vercel`
+2. Run `vercel login`
+3. Run `vercel` from the project folder
+
 ## Usage
 
 - Create folders for different subjects

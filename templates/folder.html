@@ -1,41 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ folder_name }} - Quiz App</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .quiz { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
-        .quiz a { text-decoration: none; color: blue; }
-        form { margin: 20px 0; }
-        input { margin: 5px; }
-        .flash { color: red; }
-    </style>
-</head>
-<body>
-    <h1>{{ folder_name }}</h1>
-    <a href="{{ url_for('index') }}">Back to Folders</a>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul>
-                {% for category, message in messages %}
-                    <li class="{{ category }}">{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
-    <h2>Quizzes</h2>
-    {% for quiz in quizzes %}
-        <div class="quiz">
-            <a href="{{ url_for('take_quiz', quiz_name=quiz) }}">{{ quiz }}</a>
-            <a href="{{ url_for('delete_quiz', quiz_name=quiz) }}" onclick="return confirm('Delete this quiz?')">Delete</a>
+{% extends 'base.html' %}
+
+{% block title %}{{ folder_name }} - Quiz App{% endblock %}
+
+{% block content %}
+    <section class="quiz-header">
+        <div>
+            <h2>{{ folder_name }}</h2>
+            <p>Quizzes inside this folder are ready to review and test.</p>
         </div>
-    {% endfor %}
-    <h2>Create New Quiz</h2>
-    <form action="{{ url_for('create_quiz') }}" method="post">
-        <input type="text" name="name" placeholder="Quiz Name" required>
-        <button type="submit">Create</button>
-    </form>
-</body>
-</html>
+        <a class="button" href="{{ url_for('index') }}">Back to folders</a>
+    </section>
+
+    {% if not quizzes %}
+        <p>No quizzes yet. Add one and then create terms.</p>
+    {% endif %}
+
+    <div class="card-grid">
+        {% for quiz in quizzes %}
+            <div class="card">
+                <div>
+                    <a href="{{ url_for('take_quiz', quiz_name=quiz) }}">{{ quiz }}</a>
+                </div>
+                <a class="button danger" href="{{ url_for('delete_quiz', quiz_name=quiz) }}" onclick="return confirm('Delete this quiz?')">Delete</a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <section style="margin-top:32px;">
+        <h3>Create New Quiz</h3>
+        <form action="{{ url_for('create_quiz') }}" method="post" class="form-row">
+            <input type="text" name="name" placeholder="Quiz Name" required>
+            <button type="submit" class="button">Create</button>
+        </form>
+    </section>
+{% endblock %}

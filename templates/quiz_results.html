@@ -1,27 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Results</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .incorrect { margin: 10px 0; padding: 10px; border: 1px solid #ccc; }
-    </style>
-</head>
-<body>
-    <h1>Quiz Results</h1>
-    <p>You scored {{ score }} out of {{ total }}.</p>
+{% extends 'base.html' %}
+
+{% block title %}Quiz Results{% endblock %}
+
+{% block content %}
+    <section class="quiz-header">
+        <div>
+            <h2>Quiz Results</h2>
+            <p>Your performance summary is below.</p>
+        </div>
+    </section>
+
+    <div class="card" style="margin-bottom: 28px;">
+        <p style="font-size: 1.2rem; margin: 0;">You scored <strong>{{ score }}</strong> out of <strong>{{ total }}</strong>.</p>
+    </div>
+
     {% if incorrect %}
-        <h2>Incorrect Answers</h2>
-        {% for item in incorrect %}
-            <div class="incorrect">
-                <p><strong>{{ item.term }}</strong></p>
-                <p>Correct: {{ item.correct }}</p>
-                <p>Your answer: {{ item.selected }}</p>
-            </div>
-        {% endfor %}
+        <h3>Incorrect Answers</h3>
+        <div class="card-grid">
+            {% for item in incorrect %}
+                <div class="card" style="background: #fff1f2; border-color: #fecdd3;">
+                    <p><strong>{{ item.term }}</strong></p>
+                    <p>Correct: {{ item.correct }}</p>
+                    <p>Your answer: {{ item.selected }}</p>
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
-    <a href="{{ url_for('index') }}">Back to Home</a>
-</body>
-</html>
+
+    <p style="margin-top: 24px;"><a class="button" href="{{ url_for('index') }}">Back to Home</a></p>
+{% endblock %}
