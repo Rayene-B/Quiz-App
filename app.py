@@ -9,7 +9,8 @@ import time
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # Change this to a random secret key
 
-DATA_FILE = 'quiz_data.json'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, 'quiz_data.json')
 
 def load_data():
     if os.path.exists(DATA_FILE):
@@ -61,13 +62,15 @@ def folder(folder_name):
 @app.route('/create_quiz', methods=['POST'])
 def create_quiz():
     name = request.form['name']
-    folder_name = session.get('current_folder')
+    folder_name = request.form.get('folder_name') or session.get('current_folder')
     if not folder_name:
+        flash('Folder not selected. Open a folder first.', 'error')
         return redirect(url_for('index'))
     data = load_data()
     if name and name not in data["folders"][folder_name]["quizzes"]:
         data["folders"][folder_name]["quizzes"][name] = []
         save_data(data)
+        session['current_folder'] = folder_name
         session['current_quiz'] = name
         return redirect(url_for('add_terms'))
     else:
@@ -98,24 +101,21 @@ def finish_adding_terms():
     folder_name = session.get('current_folder')
     return redirect(url_for('folder', folder_name=folder_name))
 
-@app.route('/delete_quiz/<quiz_name>')
-def delete_quiz(quiz_name):
-    folder_name = session.get('current_folder')
-    if not folder_name:
-        return redirect(url_for('index'))
+@app.route('/delete_quiz/<folder_name>/<quiz_name>')
+def delete_quiz(folder_name, quiz_name):
     data = load_data()
-    if quiz_name in data["folders"][folder_name]["quizzes"]:
+    if folder_name in data["folders"] and quiz_name in data["folders"][folder_name]["quizzes"]:
         del data["folders"][folder_name]["quizzes"][quiz_name]
         save_data(data)
         flash('Quiz deleted.', 'success')
     return redirect(url_for('folder', folder_name=folder_name))
 
-@app.route('/take_quiz/<quiz_name>')
-def take_quiz(quiz_name):
-    folder_name = session.get('current_folder')
-    if not folder_name:
-        return redirect(url_for('index'))
+@app.route('/take_quiz/<folder_name>/<quiz_name>')
+def take_quiz(folder_name, quiz_name):
     data = load_data()
+    if folder_name not in data["folders"]:
+        flash('Folder not found.', 'error')
+        return redirect(url_for('index'))
     if quiz_name not in data["folders"][folder_name]["quizzes"]:
         flash('Quiz not found.', 'error')
         return redirect(url_for('folder', folder_name=folder_name))
@@ -134,6 +134,7 @@ def take_quiz(quiz_name):
     session['current_question'] = 0
     session['score'] = 0
     session['incorrect'] = []
+    session['current_folder'] = folder_name
     return redirect(url_for('quiz_question'))
 
 @app.route('/quiz_question', methods=['GET', 'POST'])

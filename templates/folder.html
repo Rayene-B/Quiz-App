@@ -19,9 +19,9 @@
         {% for quiz in quizzes %}
             <div class="card">
                 <div>
-                    <a href="{{ url_for('take_quiz', quiz_name=quiz) }}">{{ quiz }}</a>
+                    <a href="{{ url_for('take_quiz', folder_name=folder_name, quiz_name=quiz) }}">{{ quiz }}</a>
                 </div>
-                <a class="button danger" href="{{ url_for('delete_quiz', quiz_name=quiz) }}" onclick="return confirm('Delete this quiz?')">Delete</a>
+                <a class="button danger" href="{{ url_for('delete_quiz', folder_name=folder_name, quiz_name=quiz) }}" onclick="return confirm('Delete this quiz?')">Delete</a>
             </div>
         {% endfor %}
     </div>
@@ -29,6 +29,7 @@
     <section style="margin-top:32px;">
         <h3>Create New Quiz</h3>
         <form action="{{ url_for('create_quiz') }}" method="post" class="form-row">
+            <input type="hidden" name="folder_name" value="{{ folder_name }}">
             <input type="text" name="name" placeholder="Quiz Name" required>
             <button type="submit" class="button">Create</button>
         </form>
